@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Typography, Paper } from '@mui/material';
 import api from '../api/api';
 
 export default function Login({ onLogin }) {
@@ -25,32 +26,38 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="auth-container">
-      <h2>Login</h2>
-      {error && <div className="alert error">{error}</div>}
+    <Paper elevation={3} style={{ padding: '20px', maxWidth: '400px', margin: '40px auto' }}>
+      <Typography variant="h5" gutterBottom>Login</Typography>
+      {error && <Typography color="error">{error}</Typography>}
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" disabled={loading}>
+        <TextField
+          label="Email"
+          type="email"
+          fullWidth
+          margin="normal"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <TextField
+          label="Password"
+          type="password"
+          fullWidth
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <Button 
+          type="submit" 
+          variant="contained" 
+          color="primary" 
+          fullWidth 
+          style={{ marginTop: '20px' }}
+        >
           {loading ? 'Logging in...' : 'Login'}
-        </button>
+        </Button>
       </form>
-    </div>
+    </Paper>
   );
 }

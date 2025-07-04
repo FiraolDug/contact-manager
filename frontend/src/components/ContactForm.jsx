@@ -13,7 +13,12 @@ export default function ContactForm({ initialData = {}, onSubmit, loading }) {
       return;
     }
     setError('');
-    onSubmit({ name, email, phone });
+    onSubmit({
+  contact_name: name,
+  contact_email: email,
+  contact_phone: phone,
+});
+
   };
 
   return (

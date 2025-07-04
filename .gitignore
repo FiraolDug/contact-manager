@@ -11,3 +11,11 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+
+# Ignore virtual environments
+.venv/
+
+# Ignore database files
+*.db
+*.sqlite3

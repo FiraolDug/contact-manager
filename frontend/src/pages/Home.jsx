@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../api/api';
 import ContactList from '../components/ContactList';
 
@@ -8,27 +8,37 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const fetchContacts = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get('/contacts');
+      setContacts(response.data);
+      setError('');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to load contacts');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const response = await api.get('/contacts');
-        setContacts(response.data);
-      } catch (err) {
-        setError(err.response?.data?.error || 'Failed to load contacts');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchContacts();
   }, []);
+
+  // This effect refetches contacts when the location changes to '/'
+  useEffect(() => {
+    if (location.pathname === '/') {
+      fetchContacts();
+    }
+  }, [location.pathname]);
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this contact?')) {
       try {
         await api.delete(`/contacts/${id}`);
-        setContacts(contacts.filter(contact => contact.id !== id));
+        setContacts((prev) => prev.filter(contact => contact.id !== id));
       } catch (err) {
         alert(err.response?.data?.error || 'Delete failed');
       }
