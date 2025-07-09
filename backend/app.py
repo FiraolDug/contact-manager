@@ -11,7 +11,7 @@ CORS(app)
 
 app.config['SECRET_KEY'] = 'secret_key'
 app.config['DATABASE_NAME'] = 'contact_manager.db'
-app.config['TOKEN_EXPERTION_TIME'] = 7200  # 2 hours
+app.config['TOKEN_EXPIRATION_TIME'] = 7200  # 2 hours
 
 
 def get_database_connection():
@@ -120,7 +120,7 @@ def register():
 
     token = jwt.encode({
         'user_id': user_id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config['TOKEN_EXPERTION_TIME'])
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config['TOKEN_EXPIRATION_TIME'])
     }, app.config['SECRET_KEY'], algorithm='HS256')
 
     return jsonify({
@@ -153,7 +153,7 @@ def login():
     if check_password_hash(user['password'], password):
         token = jwt.encode({
             'user_id': user['id'],
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config['TOKEN_EXPERTION_TIME'])
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config['TOKEN_EXPIRATION_TIME'])
         }, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({
@@ -186,6 +186,47 @@ def get_contacts(current_user):
     contacts = connection.execute(
         'SELECT * FROM contact WHERE user_id = ?', (current_user['id'],)
     ).fetchall()
+    connection.close()
+    return jsonify([dict(contact) for contact in contacts])
+
+
+@app.route('/contacts/search', methods=['GET'])
+@token_required
+def search_contacts(current_user):
+    search_term = request.args.get('q', '').strip()
+    sort_by = request.args.get('sort_by', 'contact_name')
+    sort_order = request.args.get('sort_order', 'asc')
+    
+    # Validate sort_by parameter
+    allowed_sort_fields = ['contact_name', 'contact_email', 'contact_phone']
+    if sort_by not in allowed_sort_fields:
+        sort_by = 'contact_name'
+    
+    # Validate sort_order parameter
+    if sort_order not in ['asc', 'desc']:
+        sort_order = 'asc'
+    
+    connection = get_database_connection()
+    
+    if search_term:
+        # Search in name, email, and phone
+        query = '''
+            SELECT * FROM contact 
+            WHERE user_id = ? 
+            AND (contact_name LIKE ? OR contact_email LIKE ? OR contact_phone LIKE ?)
+            ORDER BY {} {}
+        '''.format(sort_by, sort_order.upper())
+        
+        search_pattern = f'%{search_term}%'
+        contacts = connection.execute(
+            query, 
+            (current_user['id'], search_pattern, search_pattern, search_pattern)
+        ).fetchall()
+    else:
+        # No search term, just sort
+        query = f'SELECT * FROM contact WHERE user_id = ? ORDER BY {sort_by} {sort_order.upper()}'
+        contacts = connection.execute(query, (current_user['id'],)).fetchall()
+    
     connection.close()
     return jsonify([dict(contact) for contact in contacts])
 

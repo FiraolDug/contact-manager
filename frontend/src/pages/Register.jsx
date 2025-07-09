@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Typography, Paper } from '@mui/material';
-import api from '../api/api';
+import { authAPI } from '../api/api';
 
 export default function Register({ onRegister }) {
   const [username, setUsername] = useState('');
@@ -13,7 +13,7 @@ export default function Register({ onRegister }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/register', { username, email, password });
+      const response = await authAPI.register({ username, email, password });
       onRegister(response.data.user, response.data.token);
       navigate('/');
     } catch (err) {

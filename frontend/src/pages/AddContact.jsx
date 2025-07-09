@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/api'; // Ensure this file exists
-import ContactForm from '../components/ContactForm'; // Ensure this file exists
+import { contactAPI } from '../api/api';
+import ContactForm from '../components/ContactForm';
 import { Paper, Typography } from '@mui/material';
 
 export default function AddContact() {
@@ -9,7 +9,7 @@ export default function AddContact() {
 
   const handleSubmit = async (data) => {
     try {
-      await api.post('/contacts', data);
+      await contactAPI.create(data);
       navigate('/');
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to create contact');

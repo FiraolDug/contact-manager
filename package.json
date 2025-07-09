@@ -1,0 +1,28 @@
+{
+  "name": "contact-manager",
+  "version": "1.0.0",
+  "description": "Full-stack contact management application with Flask backend and React frontend",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && python run.py",
+    "frontend": "cd frontend && npm start",
+    "install-all": "npm install && cd frontend && npm install",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "build": "cd frontend && npm run build",
+    "setup": "npm run install-all && cd backend && pip install -r requirements.txt",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "flask",
+    "react",
+    "contact-manager",
+    "fullstack",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 

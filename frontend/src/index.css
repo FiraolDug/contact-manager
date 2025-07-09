@@ -103,3 +103,54 @@ button:disabled {
   text-align: center;
   padding: 20px;
 }
+
+/* Enhanced search and filter styles */
+.search-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.search-container .MuiTextField-root {
+  background: white;
+  border-radius: 8px;
+}
+
+.search-container .MuiFormControl-root {
+  background: white;
+  border-radius: 8px;
+}
+
+/* Table enhancements */
+.contacts-table {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.contacts-table .MuiTableHead-root {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.contacts-table .MuiTableRow-root:hover {
+  background-color: rgba(102, 126, 234, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .search-container {
+    padding: 15px;
+  }
+  
+  .MuiBox-root {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { TextField, Button, Paper, Typography, Alert } from '@mui/material';
 
 export default function ContactForm({ initialData = {}, onSubmit, loading }) {
-  const [name, setName] = useState(initialData.name || '');
-  const [email, setEmail] = useState(initialData.email || '');
-  const [phone, setPhone] = useState(initialData.phone || '');
+  const [name, setName] = useState(initialData.contact_name || '');
+  const [email, setEmail] = useState(initialData.contact_email || '');
+  const [phone, setPhone] = useState(initialData.contact_phone || '');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -14,45 +15,54 @@ export default function ContactForm({ initialData = {}, onSubmit, loading }) {
     }
     setError('');
     onSubmit({
-  contact_name: name,
-  contact_email: email,
-  contact_phone: phone,
-});
-
+      contact_name: name,
+      contact_email: email,
+      contact_phone: phone,
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="contact-form">
-      {error && <div className="alert error">{error}</div>}
-      <div className="form-group">
-        <label>Name</label>
-        <input
-          type="text"
+    <Paper elevation={3} style={{ padding: '24px', maxWidth: '500px', margin: '0 auto' }}>
+      <Typography variant="h6" gutterBottom>
+        {initialData.contact_name ? 'Edit Contact' : 'Add Contact'}
+      </Typography>
+      {error && <Alert severity="error" style={{ marginBottom: 16 }}>{error}</Alert>}
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          fullWidth
+          margin="normal"
           required
         />
-      </div>
-      <div className="form-group">
-        <label>Email</label>
-        <input
+        <TextField
+          label="Email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+          margin="normal"
           required
         />
-      </div>
-      <div className="form-group">
-        <label>Phone</label>
-        <input
-          type="text"
+        <TextField
+          label="Phone"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
+          fullWidth
+          margin="normal"
         />
-      </div>
-      <button type="submit" disabled={loading}>
-        {loading ? 'Saving...' : 'Save Contact'}
-      </button>
-    </form>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          disabled={loading}
+          style={{ marginTop: 20 }}
+        >
+          {loading ? 'Saving...' : 'Save Contact'}
+        </Button>
+      </form>
+    </Paper>
   );
 }

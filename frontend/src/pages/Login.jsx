@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Typography, Paper } from '@mui/material';
-import api from '../api/api';
+import { authAPI } from '../api/api';
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ export default function Login({ onLogin }) {
     setError('');
     
     try {
-      const response = await api.post('/login', { email, password });
+      const response = await authAPI.login({ email, password });
       onLogin(response.data.user, response.data.token);
       navigate('/');
     } catch (err) {

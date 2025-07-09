@@ -32,4 +32,36 @@ api.interceptors.response.use(
   }
 );
 
+// Contact API methods
+export const contactAPI = {
+  // Get all contacts
+  getAll: () => api.get('/contacts'),
+  
+  // Search contacts with filters
+  search: (params = {}) => {
+    const { q = '', sort_by = 'contact_name', sort_order = 'asc' } = params;
+    return api.get('/contacts/search', {
+      params: { q, sort_by, sort_order }
+    });
+  },
+  
+  // Get single contact
+  getById: (id) => api.get(`/contacts/${id}`),
+  
+  // Create contact
+  create: (data) => api.post('/contacts', data),
+  
+  // Update contact
+  update: (id, data) => api.put(`/contacts/${id}`, data),
+  
+  // Delete contact
+  delete: (id) => api.delete(`/contacts/${id}`)
+};
+
+// Auth API methods
+export const authAPI = {
+  login: (credentials) => api.post('/login', credentials),
+  register: (userData) => api.post('/register', userData)
+};
+
 export default api;
